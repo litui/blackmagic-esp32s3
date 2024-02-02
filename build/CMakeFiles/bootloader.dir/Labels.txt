@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/Users/litui/dev/bmp/espbmp/build/CMakeFiles/bootloader
+/Users/litui/dev/bmp/espbmp/build/CMakeFiles/bootloader.rule
+/Users/litui/dev/bmp/espbmp/build/CMakeFiles/bootloader-complete.rule
+/Users/litui/dev/bmp/espbmp/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/Users/litui/dev/bmp/espbmp/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/Users/litui/dev/bmp/espbmp/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/Users/litui/dev/bmp/espbmp/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/Users/litui/dev/bmp/espbmp/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/Users/litui/dev/bmp/espbmp/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/Users/litui/dev/bmp/espbmp/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
