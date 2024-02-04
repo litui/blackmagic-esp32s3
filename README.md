@@ -1,35 +1,36 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C6 | ESP32-H2 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | -------- | -------- |
+## ESP32S3 Blackmagic (Work-in-progress)
 
-# _Sample project_
+This is a "port" (loosely defined) of the [Blackmagic debugger](https://github.com/blackmagic-debug/blackmagic) to ESP32-S3, based on the work of the Flipper Devices team on [their ESP32-S2 version](https://github.com/flipperdevices/blackmagic-esp32-s2).
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+I wanted to rework this for ESP-IDF 5, the latest upstream Blackmagic changes, re-add JTAG support, and use the LilyGo T-Display S3 AMOLED since I have a couple of those boards around and want to eventually use the display. To this end, I started from scratch with a new tree and only pulled in the pieces that made sense, tweaking and fixing as I went.
 
-This is the simplest buildable example. The example is used by command `idf.py create-project`
-that copies the project to user specified path and set it's name. For more information follow the [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project)
+### What's working
 
+* The gdb server seems to be working fine, discovering over SWD, and able to do things
 
+### What's not tested or not working
 
-## How to use example
-We encourage the users to use the example as a template for the new projects.
-A recommended way is to follow the instructions on a [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project).
+* JTAG (wasn't set up in the Flipper Zero version)
+* Networking / wifi
+    * these changed quite a bit in ESP-IDF 5 so I haven't brought them back yet
+    * I don't really like aspects of how the original web interface was done -- wifi password shouldn't be so easily viewable/accessible, even from within the LAN
+* NV storage (I didn't pull this in since it depends on having a configuration interface, which I don't yet)
+* Flipper Zero CLI - I won't be importing this since I'm not using this debugger with the Flipper Zero
+* CMSIS-DAP support - Might bring this back once I get the display working so it's easy to distinguish what state it's in
+* (Not tested) serial monitoring on the second USB-CDC device
+* (Not tested) blackmagic debug messages when enabled
+* (Not tested) semihosting messages
+* (Not tested) RTT messages
 
-## Example folder contents
+### Future to-do
 
-The project **sample_project** contains one source file in C language [main.c](main/main.c). The file is located in folder [main](main).
+* Support for that fancy little AMOLED display
+    * Since we only have one (green) LED, it'd be nice to have virtual LEDs visible on the display for the other two
+* Something for the buttons on the front to do
+* More close alignment with how native Blackmagic works, especially in CDC paths on OSX (/dev/cu.usbmodem########, etc.)
 
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt`
-files that provide set of directives and instructions describing the project's source files and targets
-(executable, library, or both). 
+### Building / Hardware considerations
 
-Below is short explanation of remaining files in the project folder.
+This build takes up a fair bit of RAM so make sure if you're building for different hardware that your device has SPIRAM and that you have it configured and working in your sdkconfig.h (via menuconfig). You want to be able to use `CONFIG_SPIRAM_TRY_ALLOCATE_WIFI_LWIP=y` and `CONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY=y` at least. I made my SPIRAM accessible through malloc though the flipper devices version used `CONFIG_SPIRAM_USE_CAPS_ALLOC`.
 
-```
-├── CMakeLists.txt
-├── main
-│   ├── CMakeLists.txt
-│   └── main.c
-└── README.md                  This is the file you are currently reading
-```
-Additionally, the sample project contains Makefile and component.mk files, used for the legacy Make based build system. 
-They are not used or needed when building with CMake and idf.py.
+An adjustment was made to the `CMakeLists.txt` for blackmagic-fw to ensure its core is compiled with `-std=c11`.
