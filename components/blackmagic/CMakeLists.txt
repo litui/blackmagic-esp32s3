@@ -5,12 +5,17 @@ set(PLATFORM_DIR "esp32-platform")
 set(BM_SOURCES
     ${BM_DIR}/src/platforms/common/swdptap.c
     ${BM_DIR}/src/platforms/common/jtagtap.c
-    ${PLATFORM_DIR}/platform.c
-    ${PLATFORM_DIR}/gdb-glue.c
-    ${PLATFORM_DIR}/usb_serial.c
-)
-
-set(BM_TARGETS
+    ${BM_DIR}/src/command.c
+    ${BM_DIR}/src/crc32.c
+    ${BM_DIR}/src/exception.c
+    ${BM_DIR}/src/gdb_main.c
+    ${BM_DIR}/src/gdb_packet.c
+    ${BM_DIR}/src/hex_utils.c
+    ${BM_DIR}/src/main.c
+    ${BM_DIR}/src/maths_utils.c
+    ${BM_DIR}/src/morse.c
+    ${BM_DIR}/src/remote.c
+    ${BM_DIR}/src/rtt.c
     ${BM_TARGET_DIR}/adiv5.c
     ${BM_TARGET_DIR}/adiv5_jtag.c
     ${BM_TARGET_DIR}/adiv5_swd.c
@@ -68,17 +73,12 @@ set(BM_TARGETS
     ${BM_TARGET_DIR}/target_probe.c
     ${BM_TARGET_DIR}/target.c
     ${BM_TARGET_DIR}/zynq7000.c
+)
 
-    ${BM_DIR}/src/command.c
-    ${BM_DIR}/src/crc32.c
-    ${BM_DIR}/src/exception.c
-    ${BM_DIR}/src/gdb_main.c
-    ${BM_DIR}/src/gdb_packet.c
-    ${BM_DIR}/src/hex_utils.c
-    ${BM_DIR}/src/main.c
-    ${BM_DIR}/src/maths_utils.c
-    ${BM_DIR}/src/morse.c
-    ${BM_DIR}/src/remote.c
+set(BM_OVERRIDES
+    ${PLATFORM_DIR}/platform.c
+    ${PLATFORM_DIR}/gdb-glue.c
+    ${PLATFORM_DIR}/usb_serial.c
 )
 
 set(BM_INCLUDE
@@ -106,8 +106,10 @@ execute_process(
 
 message(STATUS "BM version: ${BM_GIT_DESC}")
 
-idf_component_register(SRCS ${BM_SOURCES} ${BM_TARGETS}
+idf_component_register(SRCS ${BM_SOURCES} ${BM_OVERRIDES}
     INCLUDE_DIRS ${BM_INCLUDE}
     PRIV_REQUIRES ${BM_REQUIREMENTS})
 
-target_compile_options(${COMPONENT_LIB} PRIVATE -DPC_HOSTED=0 -DFIRMWARE_VERSION="${BM_GIT_DESC}" -DENABLE_DEBUG=1 -Wno-char-subscripts -Wno-attributes -std=gnu11)
+target_compile_options(${COMPONENT_LIB} PRIVATE -DPC_HOSTED=0 -DFIRMWARE_VERSION="${BM_GIT_DESC}" -DENABLE_DEBUG=1 -DENABLE_RTT=1 -Wno-char-subscripts -Wno-attributes)
+
+set_property(SOURCE ${BM_SOURCES} PROPERTY COMPILE_FLAGS -std=c11)

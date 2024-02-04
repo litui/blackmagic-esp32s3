@@ -1,1 +1,3 @@
+.vscode
 sdkconfig.old
+build/**
