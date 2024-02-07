@@ -1,0 +1,28 @@
+menu "Blackmagic-ESP32S3 Hardware"
+
+    choice BOARD
+        prompt "Board"
+        default BOARD_TDISPLAY_S3_AMOLED
+
+        config BOARD_TDISPLAY_S3_AMOLED
+            bool
+            prompt "T-Display S3 AMOLED"
+            select CONFIG_SPIRAM
+            select CONFIG_SPIRAM_MODE_OCT
+            select CONFIG_SPIRAM_TYPE_AUTO
+            select CONFIG_SPIRAM_ALLOW_STACK_EXTERNAL_MEMORY
+            select CONFIG_SPIRAM_SPEED_80M
+            select CONFIG_SPIRAM_USE_MALLOC
+            select CONFIG_SPIRAM_MEMTEST
+            select CONFIG_SPIRAM_TRY_ALLOCATE_WIFI_LWIP
+            select CONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY
+            select RM67162_GRAPHICS
+
+    endchoice
+
+    config RM67162_GRAPHICS
+        bool
+        prompt "RM67162 Graphics"
+        depends on BOARD_TDISPLAY_S3_AMOLED
+
+endmenu

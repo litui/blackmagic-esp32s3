@@ -1,21 +1,28 @@
 #include "led.h"
+#include "math.h"
 #include <driver/ledc.h>
 #include <esp_log.h>
 #include <esp_err.h>
 
+#if defined(CONFIG_BOARD_TDISPLAY_S3_AMOLED)
 #define LED_PIN_RED (-1)
 #define LED_PIN_GREEN (38)
 #define LED_PIN_BLUE (-1)
+#else
+#define LED_PIN_RED (-1)
+#define LED_PIN_GREEN (-1)
+#define LED_PIN_BLUE (-1)
+#endif
 
 #define LEDC_MODE LEDC_LOW_SPEED_MODE
-
-#define TAG "led"
 
 #define LED_PWM_MAX_VAL 256U
 
 #define LED_RED_MAX_VAL 20U
 #define LED_GREEN_MAX_VAL 20U
 #define LED_BLUE_MAX_VAL 20U
+
+static const char* TAG = "led";
 
 typedef enum {
     LedChannelRed,
@@ -67,8 +74,8 @@ void led_init() {
         .duty = LED_PWM_MAX_VAL, // Set duty to 100%
         .hpoint = 0};
     ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel_blue));
-    ESP_LOGI(TAG, "init done");
 #endif
+    ESP_LOGI(TAG, "init done");
 }
 
 void led_set(uint8_t red, uint8_t green, uint8_t blue) {
@@ -80,15 +87,17 @@ void led_set(uint8_t red, uint8_t green, uint8_t blue) {
 void led_set_red(uint8_t value) {
 #if LED_PIN_RED != -1
     uint32_t pwm_value = ((uint32_t)value * LED_RED_MAX_VAL) / 255;
-    ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LedChannelRed, LED_PWM_MAX_VAL - pwm_value));
+    ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LedChannelRed, pwm_value > LED_PWM_MAX_VAL ? LED_PWM_MAX_VAL : pwm_value));
     ESP_ERROR_CHECK(ledc_update_duty(LEDC_MODE, LedChannelRed));
+#else
+    led_set_green(value);
 #endif
 }
 
 void led_set_green(uint8_t value) {
 #if LED_PIN_GREEN != -1
     uint32_t pwm_value = ((uint32_t)value * LED_GREEN_MAX_VAL) / 255;
-    ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LedChannelGreen, LED_PWM_MAX_VAL - pwm_value));
+    ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LedChannelGreen, pwm_value > LED_PWM_MAX_VAL ? LED_PWM_MAX_VAL : pwm_value));
     ESP_ERROR_CHECK(ledc_update_duty(LEDC_MODE, LedChannelGreen));
 #endif
 }
@@ -96,7 +105,9 @@ void led_set_green(uint8_t value) {
 void led_set_blue(uint8_t value) {
 #if LED_PIN_BLUE != -1
     uint32_t pwm_value = ((uint32_t)value * LED_BLUE_MAX_VAL) / 255;
-    ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LedChannelBlue, LED_PWM_MAX_VAL - pwm_value));
+    ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LedChannelBlue, pwm_value > LED_PWM_MAX_VAL ? LED_PWM_MAX_VAL : pwm_value));
     ESP_ERROR_CHECK(ledc_update_duty(LEDC_MODE, LedChannelBlue));
+#else
+    led_set_green(value);
 #endif
 }

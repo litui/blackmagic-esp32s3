@@ -34,18 +34,22 @@ extern bool debug_bmp;
     do {               \
     } while(0)
 
+
+#if defined(CONFIG_BOARD_TDISPLAY_S3_AMOLED)
+#define NRST_PIN (42)
 #define TMS_PIN (43)
+#define TCK_PIN (44)
 #define TDI_PIN (46)
 #define TDO_PIN (45)
-#define TCK_PIN (44)
 
 #undef PLATFORM_HAS_TRACESWO
 #define TRACESWO_PIN 18
+#endif
 
 // ON ESP32 we dont have the PORTS, this is dummy value until code is corrected
 #define SWCLK_PORT (0)
-#define SWCLK_PIN (44)
-#define SWDIO_PIN (43)
+#define SWCLK_PIN TCK_PIN
+#define SWDIO_PIN TMS_PIN
 
 #define gpio_set_val(port, pin, value)       \
     do {                                     \

@@ -8,8 +8,13 @@
 // #include "network-uart.h"
 
 #define USB_UART_PORT_NUM UART_NUM_0
-#define USB_UART_TXD_PIN (43)
-#define USB_UART_RXD_PIN (44)
+#if defined(CONFIG_BOARD_TDISPLAY_S3_AMOLED)
+#define USB_UART_TXD_PIN (14)
+#define USB_UART_RXD_PIN (15)
+#else
+#define USB_UART_TXD_PIN (-1)
+#define USB_UART_RXD_PIN (-1)
+#endif
 #define USB_UART_BAUD_RATE (230400)
 #define USB_UART_RX_BUF_SIZE (1024)
 
