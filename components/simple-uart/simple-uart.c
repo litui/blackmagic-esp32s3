@@ -1,3 +1,5 @@
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 #include <driver/gpio.h>
 // #include <driver/periph_ctrl.h>
 #include <hal/uart_ll.h>
@@ -156,18 +158,12 @@ void simple_uart_init(UartConfig* cfg) {
 }
 
 void simple_uart_write(uint8_t uart_num, const uint8_t* data, const uint32_t data_size) {
-    uint32_t to_write = data_size;
-    while(to_write > 0) {
-        while(uart_ll_get_txfifo_len(UART_LL_GET_HW(uart_num)) == 0) {
-            ; /* Wait */
-        }
-
-        // uint32_t write_size = 0;
-        uart_ll_write_txfifo(UART_LL_GET_HW(uart_num), data + (data_size - to_write), to_write);
-        // uart_hal_write_txfifo(
-        //     UART_HAL(uart_num), data + (data_size - to_write), to_write, &write_size);
-        // to_write -= write_size;
+    while(uart_ll_get_txfifo_len(UART_LL_GET_HW(uart_num)) == 0) {
+        /* Wait */
+        vTaskDelay(pdMS_TO_TICKS(1));
     }
+
+    uart_ll_write_txfifo(UART_LL_GET_HW(uart_num), data, data_size);
 }
 
 bool simple_uart_available(uint8_t uart_num) {
@@ -209,6 +205,7 @@ static void simple_uart_isr(void* arg) {
             uint8_t data;
             while(simple_uart_available(hal_num)) {
                 simple_uart_read(hal_num, &data, 1);
+                vTaskDelay(pdMS_TO_TICKS(10));
             }
         }
     }

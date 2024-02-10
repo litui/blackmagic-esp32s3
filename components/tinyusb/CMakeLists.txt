@@ -53,7 +53,7 @@ target_sources(${COMPONENT_TARGET} INTERFACE
     "${COMPONENT_DIR}/tinyusb/src/portable/espressif/esp32sx/dcd_esp32sx.c"
     "${COMPONENT_DIR}/tinyusb/src/host/hub.c"
     "${COMPONENT_DIR}/tinyusb/src/host/usbh.c"
-    "${COMPONENT_DIR}/tinyusb/src/host/usbh_control.c"
+    # "${COMPONENT_DIR}/tinyusb/src/host/usbh_control.c"
 
     "${COMPONENT_DIR}/drivers/usb-glue.c"
 
