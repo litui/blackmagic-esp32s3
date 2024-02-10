@@ -1827,6 +1827,12 @@ CONFIG_WIFI_PROV_STA_ALL_CHANNEL_SCAN=y
 CONFIG_BOARD_TDISPLAY_S3_AMOLED=y
 CONFIG_RM67162_GRAPHICS=y
 # end of Blackmagic-ESP32S3 Hardware
+
+#
+# Hardware Agnostic Graphics Library (HAGL)
+#
+CONFIG_HAGL_TJPGD_NEEDS_BYTESWAP=y
+# end of Hardware Agnostic Graphics Library (HAGL)
 # end of Component config
 
 # CONFIG_IDF_EXPERIMENTAL_FEATURES is not set

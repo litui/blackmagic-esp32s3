@@ -5,7 +5,6 @@ set(SOURCES
     "usb-uart.c"
     "led.c"
     "soft-uart-log.c"
-    "graphics/rm67162.c"
     "display.c"
 )
 
@@ -15,5 +14,4 @@ set (INCLUDES
 )
 
 idf_component_register(SRCS ${SOURCES}
-                    INCLUDE_DIRS ${INCLUDES}
-                    REQUIRES blackmagic simple-uart tinyusb driver soft-uart framebuffer)
+                    INCLUDE_DIRS ${INCLUDES})

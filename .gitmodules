@@ -4,3 +4,9 @@
 [submodule "components/tinyusb/tinyusb"]
 	path = components/tinyusb/tinyusb
 	url = https://github.com/hathach/tinyusb
+[submodule "components/hagl"]
+	path = components/hagl
+	url = https://github.com/tuupola/hagl
+[submodule "components/hagl_hal"]
+	path = components/hagl_hal
+	url = git@github.com:tuupola/hagl_esp_mipi.git
